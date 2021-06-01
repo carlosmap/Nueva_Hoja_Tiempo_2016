@@ -1,0 +1,36 @@
+<?php
+    //$meses= array(1,2,3,4,5,6,7,8,9,10,11,12); //meses de un mes
+    $meses2= array(2,3,4,5,7,8,9,10,11);
+    $f=0; $c=0; //define los valores iniciales de las filas y las columnas
+    
+    //$activid__inicio_fin= [][] array();
+    $vigencias= array(2013,2014);  ///select vigencias
+    foreach($vigencias as $val )  //while vigencias
+    {
+        echo $val."<br>";   //select meses de la vigencia
+        foreach($meses2 as  $mex)    //while meses de la vigencia
+        {
+            //$ind=$mex-1;  //asigna el valor del mes 
+            //echo $meses[$ind]."<br>";
+            //$fecha=$mex.' - '.$vigencias;
+            $activid__inicio_fin[$f][$c]= $mex; //almacena la primera fecha del mes
+            $mes_inicio=$mex; //alamcena el valor, para comparalo mas adelante, y encontrar el mes hasta donde va la planeacion
+            echo $activid__inicio_fin[$f][$c]." --<br>";            
+            foreach($meses2 as  $mex2)    //se ejecuta la consulta, para buscar hasta que mes exite planeación
+            {
+                $mes_inicio++;
+                
+                if($mex!=$mes_inicio) //si el siguiente mes es diferente a la secuencia de meses
+                {
+                    $c++;
+                    $activid__inicio_fin[$f][$c]=$mex; //se almacena el mes, hasta donde exista planeacion
+                    
+                }
+            }
+            echo $activid__inicio_fin[0][0]." ** ".$activid__inicio_fin[0][1]."<br>";
+            $f++; //aumenta la fila, para almacenar la siguiente fecha en la matriz
+            $c=0;
+           // break;
+        }
+    }
+?>

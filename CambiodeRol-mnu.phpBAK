@@ -1,0 +1,163 @@
+<?php
+	session_start();
+	include "funciones.php";
+	include "validacion.php";
+	include "validaUsrBd.php";
+?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<script>
+<!--
+function desactivar(obj){
+	document.autoriza.perfil.checked=false
+	document.autoriza.delegacion.checked=false
+	obj.checked=true
+}
+
+function MM_goToURL() { //v3.0
+  var i, args=MM_goToURL.arguments; document.MM_returnValue = false;
+  for (i=0; i<(args.length-1); i+=2) eval(args[i]+".location='"+args[i+1]+"'");
+}
+//-->
+</script>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<title>Cambio de role en el sistema</title>
+<LINK REL="stylesheet" HREF="css/estilo.css" TYPE="text/css">
+
+<style type="text/css">
+<!--
+#Layer1 {
+	position:absolute;
+	width:266px;
+	height:44px;
+	z-index:1;
+	left: -2px;
+	top: 162px;
+}
+-->
+</style>
+</head>
+
+<body bgcolor="#EAEAEA" leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">
+<? include("bannerArriba.php") ; ?>
+<div class="TxtNota1" style="position:absolute; left:258px; top:11px; width: 365px;">
+	<div align="center"> CAMBIO DE ROLE EN EL SISTEMA </div>
+</div>
+<div class="Titulos" style="position:absolute; left:10px; top:72px; width: 525px;">
+	<? echo strtoupper($nombreempleado." ".$apellidoempleado); ?>
+</div>
+
+<table width="100%" border="0" align="left" cellpadding="0" cellspacing="0">
+  <tr>
+    
+  </tr>
+<form name="autoriza" action="CambiodeRol-mnu.php" method="POST">
+	<TR><TD> </TD></TR>
+		<TR><TD> </TD></TR>
+
+	<?php
+
+		$id_div = esdirectordivision($laUnidad);
+		$id_dep = esdirectordepartamento($laUnidad);
+		$id_pro = esdirectordeproyecto($laUnidad);
+		$id_coo = escoordinadordeproyecto($laUnidad);
+
+		echo "<tr><td class='TxtTabla'><input type=radio name=perfil value=1>Autorización a terceros para que asuman mi perfil</td></tr>";
+
+		if($id_div <> -1 or $id_dep <> -1 or $id_pro <> -1 or $id_coo <> -1){
+			
+			//echo "<tr><td class='TxtTabla'><input type=radio name=delegacion onclick = desactivar(this); value=2>Delegación de funciones</td></tr></table>";
+		}else{
+			// echo "<tr><td class='TxtTabla'><input type=radio name=perfil value=1>Autorización a terceros para que asuman mi perfil</td></tr>";
+		}
+	?>
+	</table>
+	
+	 <div id="Layer1">
+		  <table><tr><td><input name=decidir type=submit class="Boton" value=Continuar></td>
+		<td><a href="#"><input name=atras type=button class="Boton" onclick="MM_goToURL('parent','frm-GrabaTiempo.php');return document.MM_returnValue" value="  Regresar   "></a></td>
+		</tr></table>
+	</div>
+
+</form>
+
+
+</body>
+</html>
+
+<?php
+	if($decidir=="Continuar"){
+		if($perfil=="1"){
+			//Despliega el archivo CambiodeRolphp
+			echo "<script>location.href='CambiodeRol.php'</script>";
+		}elseif($delegacion=="2"){
+			echo "<script>location.href='delegarAutoridad.php'</script>";
+		}
+	}
+?>
+
+<?php
+//Algunas funciones
+function esdirectordivision($lg){
+	$sql = "select * from divisiones where id_director='$lg'";
+	include "validaUsrBd.php";
+	$ap = mssql_query($sql);
+	$reg = mssql_fetch_array($ap);
+	if(mssql_num_rows($ap)>0){
+		$id_division = $reg[id_division];
+		return $id_division;
+	}else{
+		return -1;
+	}
+}
+
+
+function esdirectordepartamento($lg){
+	$sql = "select * from departamentos where id_director='$lg'";
+	include "validaUsrBd.php";
+	$ap = mssql_query($sql);
+	$reg = mssql_fetch_array($ap);
+	if(mssql_num_rows($ap)>0){
+		$id_departamento = $reg[id_departamento];
+		return $id_departamento;
+	}else{
+		return -1;
+	}
+}
+
+function esdirectordeproyecto($lg){
+	$sql = "select * from proyectos where id_director='$lg'";
+	include "validaUsrBd.php";
+	$ap = mssql_query($sql);
+
+	if(mssql_num_rows($ap)>0){
+		/*$i=0;
+		while($reg = mssql_fetch_array($ap)){
+			$id_proyecto[$i] = $reg[id_proyecto];
+			$i++;
+		}*/
+		return 1;
+	}else{
+		return -1;
+	}
+}
+
+
+function escoordinadordeproyecto($lg){
+	$sql = "select * from proyectos where id_coordinador='$lg'";
+	include "validaUsrBd.php";
+	$ap = mssql_query($sql);
+
+	if(mssql_num_rows($ap)>0){
+		/*$i=0;
+		while($reg = mssql_fetch_array($ap)){
+			$id_proyecto[$i] = $reg[id_coordinador];
+			$i++;
+		}*/
+		return 1;
+	}else{
+		return -1;
+	}
+}
+?>
